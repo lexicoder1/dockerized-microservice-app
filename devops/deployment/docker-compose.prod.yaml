@@ -1,0 +1,35 @@
+services:
+  order-service:
+    build: 
+      context: ../../             #the root folder  where the app and where the docker file is located
+      dockerfile: devops/deployment/order-service/Dockerfile   #from the root folder where the file is located
+      # platform: linux/amd64,linux/arm64,windows/amd64
+    image: lexikhoder/order-service:2
+    container_name: order-service-container
+    networks:
+      - micro-service-network
+    ports:
+      - "4004:4002"
+    restart: always
+   
+    depends_on:
+      - product-service
+  product-service:
+    build: 
+      context: ../../
+      dockerfile: devops/deployment/product-service/docker-files/Dockerfile.prod
+      # platform: linux/amd64,linux/arm64,windows/amd64
+    image: lexikhoder/product-service:1
+    container_name: product-service-container
+    networks:
+      - micro-service-network
+    ports:
+      - "4001:4001"
+    restart: always
+ 
+
+networks:
+  micro-service-network:
+    driver: bridge
+
+
